@@ -6,7 +6,9 @@
     <string name="action_SortbyR">Sort by: Rating</string>
     <string name="title_activity_detal_view">DetalView</string>
     <string name="release">Release Date: </string>
+    <string name="review">Reviews</string>
     <string name="Title">Title</string>
     <string name="overview">OVERVIEW -</string>
     <string name="vote">VOTES :   </string>
+    <string name="title_activity_reviews">Reviews</string>
 </resources>

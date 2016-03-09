@@ -53,10 +53,10 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_main, container, false);
         APIKEY="";
-
         rating GetData = new rating(getActivity());
         gridView= (GridView)view.findViewById(R.id.gridView);
         this.intent=new Intent(getActivity(),DetalView.class);
+        intent.putExtra("api",APIKEY);
         GetData.execute(true);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
