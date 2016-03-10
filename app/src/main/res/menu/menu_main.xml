@@ -6,4 +6,6 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_settings2" android:title="@string/action_SortbyR"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_settings3" android:title="@string/fav"
+        android:orderInCategory="100" app:showAsAction="never"/>
 </menu>

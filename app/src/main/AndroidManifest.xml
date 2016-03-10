@@ -26,6 +26,19 @@
             android:name=".reviews"
             android:label="@string/title_activity_reviews" >
         </activity>
+
+        <provider
+            android:name=".TestProvider"
+            android:authorities="just.some.test_provider.authority" />
+
+        <activity
+            android:name=".Fav"
+            android:label="@string/title_activity_fav" >
+        </activity>
+        <activity
+            android:name=".Fdetail"
+            android:label="@string/title_activity_fdetail" >
+        </activity>
     </application>
 
 </manifest>

@@ -3,5 +3,6 @@
     <dimen name="activity_horizontal_margin">10dp</dimen>
     <dimen name="mar">5dp</dimen>
     <dimen name="Image">200dp</dimen>
+    <dimen name="listview">125dp</dimen>
     <dimen name="activity_vertical_margin">50dp</dimen>
 </resources>

@@ -11,4 +11,8 @@
     <string name="overview">OVERVIEW -</string>
     <string name="vote">VOTES :   </string>
     <string name="title_activity_reviews">Reviews</string>
+    <string name="button2">Mark AS\n FAvorite</string>
+    <string name="fav">Favorite</string>
+    <string name="title_activity_fav">Favorite</string>
+    <string name="title_activity_fdetail">Fdetail</string>
 </resources>

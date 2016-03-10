@@ -1,7 +1,10 @@
 package com.example.nimitagg.popularmovies2;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,12 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -31,14 +36,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.zip.Inflater;
 
+import ckm.simple.sql_provider.processor.internal.Table;
+
 
 public class DetalView extends AppCompatActivity {
 
     TextView tt1,tt2,tt3,tt5;
     private String APIKEY;
-    ImageButton im1;
+    private String title,poster,overiew,release,rating;
+
     TextView tt4;
-    Button btn1;
+    Button btn1,btn2;
     TrailerAdapter trail;
     ListView lt1;
     @Override
@@ -51,11 +59,13 @@ public class DetalView extends AppCompatActivity {
         tt3= (TextView) findViewById(R.id.textView3);
         tt5= (TextView) findViewById(R.id.textView5);
         btn1= (Button) findViewById(R.id.button);
+        btn2= (Button) findViewById(R.id.button2);
         Intent intent= getIntent();
         APIKEY=intent.getStringExtra("api");
         String JsonData=intent.getStringExtra("JsonStr");
         lt1= (ListView) findViewById(R.id.listView);
         String link=intent.getStringExtra("link");
+
        // Log.e("here", JsonData);
       //  Log.e("here2",link);
         try {
@@ -65,20 +75,26 @@ public class DetalView extends AppCompatActivity {
             {
                 JSONObject Data =JsonArray.getJSONObject(i);
                 if(Data.getString("poster_path").compareTo(link)==0){
-                    tt1.setText(Data.getString("original_title"));
+                    title=Data.getString("original_title");
+                    tt1.setText(title);
                   //  Log.e("th8is", "http://image.tmdb.org/t/p/w185/" + Data.getString("poster_path"));
-                    Picasso.with(DetalView.this).load("http://image.tmdb.org/t/p/w185/" + Data.getString("poster_path")).into((ImageView) findViewById(R.id.imageView2));
-                    tt2.setText(Data.getString("release_date"));
+                    poster="http://image.tmdb.org/t/p/w154/" + Data.getString("poster_path");
+                    Picasso.with(DetalView.this).load(poster).into((ImageView) findViewById(R.id.imageView2));
+                    release=Data.getString("release_date");
+                    tt2.setText(release);
                     if(Data.getString("overview").compareTo("")!=0)
                     tt3.setText(Data.getString("overview"));
 
                     else {
                         tt3.setText("No Overview Found");
                     }
-                    tt5.setText(Data.getString("vote_average")+"/10");
+                    overiew=Data.getString("overview");
+                    rating=Data.getString("vote_average") + "/10";
+                    tt5.setText(Data.getString("vote_average") + "/10");
                     new Data(getApplicationContext()).execute(Data.getString("id"));
-                    intent1.putExtra("ID",Data.getString("id"));
-                    intent1.putExtra("api",APIKEY);
+                    intent1.putExtra("ID", Data.getString("id"));
+                    intent1.putExtra("api", APIKEY);
+
                 }
             }
         } catch (JSONException e) {
@@ -89,6 +105,25 @@ public class DetalView extends AppCompatActivity {
             public void onClick(View v) {
 
                 startActivity(intent1);
+            }
+        });
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Test testInstance = new Test();
+                Cursor cursor= getContentResolver().query(TestTable.CONTENT_URI,new String[]{TestTable.FIELD_TITLE},TestTable.FIELD_TITLE+" = ?",new String[]{title},null);
+                if(cursor.moveToFirst()){
+                    Toast.makeText(getApplicationContext(),"Already a favorite movie",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    ContentValues values = new ContentValues();
+                    values.put(TestTable.FIELD_TITLE, title);
+                    values.put(TestTable.FIELD_OVERVIEW, overiew);
+                    values.put(TestTable.FIELD_POSTER, poster);
+                    values.put(TestTable.FIELD_RATING, rating);
+                    values.put(TestTable.FIELD_RELEASE, release);
+                    getContentResolver().insert(TestTable.CONTENT_URI, values);
+                }
             }
         });
     }
@@ -104,6 +139,15 @@ public class DetalView extends AppCompatActivity {
             super.onPostExecute(strings);
             trail=new TrailerAdapter(getApplicationContext(),strings);
             lt1.setAdapter(trail);
+            lt1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String data = trail.getItem(position);
+                    Log.e("cli", "clicjed");
+                    //oast.makeText(getActivity(),data,Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(data)));
+                }
+            });
         }
 
         @Override
@@ -215,8 +259,8 @@ public class DetalView extends AppCompatActivity {
                 convertView= inflater.inflate(R.layout.trailer,null,true);
             }
             tt4=(TextView)convertView.findViewById(R.id.textView7);
-            tt4.setText("Trailer" + (position+1));
-            im1= (ImageButton) convertView.findViewById(R.id.imageButton);
+            tt4.setText("Trailer" + (position + 1));
+           /* im1= (ImageButton) convertView.findViewById(R.id.imageButton);
             im1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -228,7 +272,7 @@ public class DetalView extends AppCompatActivity {
                 public void onClick(View v) {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Trailers[position])));
                 }
-            });
+            });*/
             return convertView;
         }
 
@@ -237,4 +281,5 @@ public class DetalView extends AppCompatActivity {
             return Trailers[position];
         }
     }
+
 }

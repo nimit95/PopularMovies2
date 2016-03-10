@@ -14,12 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
 import android.widget.GridView;
-import android.widget.ImageView;
 
 
-import com.squareup.picasso.Picasso;
+
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -176,39 +176,7 @@ public class MainActivityFragment extends Fragment {
         return PicResult;
     }
 
-    public class ImageListAdapter extends ArrayAdapter {
-        private Context context;
-        private LayoutInflater inflater;
 
-        private String[] imageUrls;
-
-        public ImageListAdapter(Context context, String[] imageUrls) {
-            super(context, R.layout.image, imageUrls);
-
-            this.context = context;
-            this.imageUrls = imageUrls;
-
-            inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (null == convertView) {
-                convertView = inflater.inflate(R.layout.image, null, true);
-            }
-
-            Picasso
-                    .with(context)
-                    .load(imageUrls[position])
-                            // will explain later
-                    .into((ImageView)convertView.findViewById(R.id.imageView));
-
-            return convertView;
-        }
-        public String getItem(int position){
-            return imageUrls[position];
-        }
-    }
     @Override
     public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -229,6 +197,10 @@ public class MainActivityFragment extends Fragment {
         }
         if (id==R.id.action_settings2){
             new rating(getActivity()).execute(false);
+        }
+        if (id==R.id.action_settings3){
+            Intent intent=new Intent(getActivity(),Fav.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
