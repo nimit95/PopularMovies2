@@ -23,7 +23,6 @@ public class ImageListAdapter extends ArrayAdapter {
 
         this.context = context;
         this.imageUrls = imageUrls;
-
         inflater = LayoutInflater.from(context);
     }
 
@@ -36,7 +35,7 @@ public class ImageListAdapter extends ArrayAdapter {
         Picasso
                 .with(context)
                 .load(imageUrls[position])
-                        // will explain later
+                 // will explain later
                 .into((ImageView)convertView.findViewById(R.id.imageView));
 
         return convertView;

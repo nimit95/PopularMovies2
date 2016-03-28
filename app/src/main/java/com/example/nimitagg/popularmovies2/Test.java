@@ -9,8 +9,14 @@ import ckm.simple.sql_provider.annotation.SimpleSQLTable;
 @SimpleSQLTable(table = "test", provider = "TestProvider")
 public class Test {
 
-    @SimpleSQLColumn(value = "Title",primary = true)
+    @SimpleSQLColumn(autoincrement = true,value = "_id",primary = true)
+    public int id;
+
+    @SimpleSQLColumn(value = "Title")
     public String title;
+
+    @SimpleSQLColumn(value = "movieid")
+    public String movieid;
 
     @SimpleSQLColumn("Poster")
     public String poster;

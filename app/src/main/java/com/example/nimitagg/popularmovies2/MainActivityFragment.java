@@ -38,11 +38,16 @@ import java.net.URL;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    private String APIKEY;
+    public String APIKEY;
+    public interface Calback{
+        public void OnItemSelected(Bundle bundle);
+    }
     public MainActivityFragment() {
     }
+    //public Bundle bundle;
     ImageListAdapter imageAdapter;
     GridView gridView;
+    Bundle bundle;
     @Override
     public void onCreate(Bundle savedInstances){
         super.onCreate(savedInstances);
@@ -54,16 +59,19 @@ public class MainActivityFragment extends Fragment {
         View view=inflater.inflate(R.layout.fragment_main, container, false);
         APIKEY="";
         rating GetData = new rating(getActivity());
+        bundle=new Bundle();
         gridView= (GridView)view.findViewById(R.id.gridView);
         this.intent=new Intent(getActivity(),DetalView.class);
-        intent.putExtra("api",APIKEY);
+        bundle.putString("api", APIKEY);
         GetData.execute(true);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                String data=imageAdapter.getItem(position);
                 //oast.makeText(getActivity(),data,Toast.LENGTH_SHORT).show();
-              startActivity(intent.putExtra("link", data.substring(31)));
+                bundle.putString("link", data.substring(31));
+                ((Calback)getActivity()).OnItemSelected(bundle);
+              //startActivity(intent.putExtras(bundle));
             }
         });
         return view;
@@ -162,7 +170,7 @@ public class MainActivityFragment extends Fragment {
         }
     }
     private String[] getPicData(String JsonData) throws JSONException {
-       intent.putExtra("JsonStr",JsonData);
+       bundle.putString("JsonStr", JsonData);
         JSONObject PicJson=new JSONObject(JsonData);
         JSONArray resultarray = PicJson.getJSONArray("results");
         String[] PicResult=new String[resultarray.length()];
