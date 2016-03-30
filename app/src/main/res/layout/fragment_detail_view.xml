@@ -102,7 +102,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Click here for reviews"
+            android:text="@string/here"
             android:id="@+id/button"
             android:layout_below="@+id/textView5"
             />

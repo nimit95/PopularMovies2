@@ -6,7 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.Calback {
     public boolean mTwoPane;
@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(!isNetworkAvailable()){
+            Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
             Intent intent=new Intent(MainActivity.this,Fav.class);
             startActivity(intent);
         }
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             if(findViewById(R.id.detail_layout_container)!=null){
                 if(savedInstanceState==null){
                     mTwoPane=true;
-                    Log.e("yo","yo");
+                   // Log.e("yo","yo");
                     getSupportFragmentManager().beginTransaction().replace(R.id.detail_layout_container,new DetailViewFragment()).commit();
                 }
 
@@ -52,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         }
         else{
             Intent intent=new Intent(this,DetalView.class);
-            startActivity(intent.putExtras(bundle));
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 }

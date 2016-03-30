@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -71,7 +71,7 @@ public class reviews extends AppCompatActivity {
 
                 url = new URL("http://api.themoviedb.org/3/movie/"+params[0]+"/reviews?api_key=" + APIKEY);
 
-                Log.e("this", url + "");
+               // Log.e("this", url + "");
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -120,7 +120,7 @@ public class reviews extends AppCompatActivity {
             // Log.v("here",dataJsonStr);
 
             try {
-                Log.e("hi",dataJsonStr);
+               // Log.e("hi",dataJsonStr);
                 return getTrailerData(dataJsonStr);
 
 

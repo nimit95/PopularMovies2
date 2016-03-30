@@ -39,6 +39,8 @@ import java.net.URL;
  */
 public class MainActivityFragment extends Fragment {
     public String APIKEY;
+    public int mPosition;
+
     public interface Calback{
         public void OnItemSelected(Bundle bundle);
     }
@@ -71,9 +73,14 @@ public class MainActivityFragment extends Fragment {
                 //oast.makeText(getActivity(),data,Toast.LENGTH_SHORT).show();
                 bundle.putString("link", data.substring(31));
                 ((Calback)getActivity()).OnItemSelected(bundle);
+                mPosition=position;
               //startActivity(intent.putExtras(bundle));
             }
         });
+        if(savedInstanceState!=null && savedInstanceState.containsKey("pos")){
+            mPosition=savedInstanceState.getInt("pos",0);
+            gridView.setSelection(mPosition);
+        }
         return view;
     }
     public class rating extends AsyncTask<Boolean,Void,String[]>{
@@ -191,6 +198,15 @@ public class MainActivityFragment extends Fragment {
         inflater.inflate(R.menu.menu_main, menu);
         //return true;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(mPosition!=gridView.INVALID_POSITION){
+            outState.putInt("pos",mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

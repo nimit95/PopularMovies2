@@ -1,12 +1,12 @@
 package com.example.nimitagg.popularmovies2;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,18 +39,15 @@ public class FDetailViewFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment FDetailViewFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FDetailViewFragment newInstance(String param1, String param2) {
+    public static FDetailViewFragment newInstance(Bundle bundle) {
         FDetailViewFragment fragment = new FDetailViewFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
+
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -79,30 +76,42 @@ public class FDetailViewFragment extends Fragment {
 
         btn2= (Button) view.findViewById(R.id.button);
         Intent intent= getActivity().getIntent();
+        Bundle bundle;
+        bundle=intent.getExtras();
+        if(bundle==null)
+            bundle=getArguments();
         btn1.setText("REMOVE AS\nFAVORITE");
-        Picasso.with(getActivity()).load(intent.getStringExtra("poster")).networkPolicy(NetworkPolicy.OFFLINE).into((ImageView) view.findViewById(R.id.imageView2));
-        tt1.setText(intent.getStringExtra("title"));
-        tt2.setText(intent.getStringExtra("release"));
-        if(intent.getStringExtra("overview").compareTo("")!=0)
-            tt3.setText(intent.getStringExtra("overview"));
+        if(bundle!=null) {
+            Picasso.with(getActivity()).load(bundle.getString("poster")).networkPolicy(NetworkPolicy.OFFLINE).into((ImageView) view.findViewById(R.id.imageView2));
+            tt1.setText(bundle.getString("title"));
+            tt2.setText(bundle.getString("release"));
+            if (bundle.getString("overview").compareTo("") != 0)
+                tt3.setText(bundle.getString("overview"));
 
-        else {
-            tt3.setText("No Overview Found");
-        }
-        tt5.setText(intent.getStringExtra("rating"));
-        btn2.setVisibility(View.GONE);
-        final String temp=intent.getStringExtra("movieid");
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ContentResolver resolver=getActivity().getContentResolver();
-                Toast.makeText(getActivity(), "Removed from favorite movie", Toast.LENGTH_SHORT).show();
-                resolver.delete(TestTable.CONTENT_URI, TestTable.FIELD_MOVIEID + " = ?", new String[]{temp});
-                getActivity().getContentResolver().notifyChange(TestTable.CONTENT_URI, null);
-                getActivity().finish();
+            else {
+                tt3.setText("No Overview Found");
             }
-        });
+            tt5.setText(bundle.getString("rating"));
 
+            btn2.setVisibility(View.GONE);
+            final String temp = bundle.getString("movieid");
+
+            final Bundle finalBundle = bundle;
+           // Log.e("oko",bundle.getBoolean("pane")+"");
+            btn1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ContentResolver resolver = getActivity().getContentResolver();
+                    Toast.makeText(getActivity(), "Removed from favorite movie", Toast.LENGTH_SHORT).show();
+                    resolver.delete(TestTable.CONTENT_URI, TestTable.FIELD_MOVIEID + " = ?", new String[]{temp});
+                    getActivity().getContentResolver().notifyChange(TestTable.CONTENT_URI, null);
+                    if (!finalBundle.getBoolean("pane"))
+                        getActivity().finish();
+                    else
+                        getActivity().getSupportFragmentManager().beginTransaction().remove(FDetailViewFragment.this).commit();
+                }
+            });
+        }
         return view;
     }
 

@@ -10,14 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -72,9 +66,7 @@ public class DetailViewFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment DetailViewFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -114,8 +106,10 @@ public class DetailViewFragment extends Fragment {
         lt1= (ListView) view.findViewById(R.id.listView);
         btn2= (Button) view.findViewById(R.id.button2);
         Intent intent= getActivity().getIntent();
-        Bundle bundle=intent.getExtras();
-        bundle=getArguments();
+        Bundle bundle;
+        bundle=intent.getExtras();
+        if(bundle==null)
+            bundle=getArguments();
         if(bundle!=null) {
             APIKEY = bundle.getString("api");
             JsonData = bundle.getString("JsonStr");
@@ -238,7 +232,7 @@ public class DetailViewFragment extends Fragment {
 
                 url = new URL("http://api.themoviedb.org/3/movie/"+params[0]+"/trailers?api_key=" + APIKEY);
 
-                Log.e("this", url + "");
+              //  Log.e("this", url + "");
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
