@@ -3,6 +3,8 @@ package com.example.nimitagg.popularmovies2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -16,9 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import android.widget.GridView;
-
-
-
+import android.widget.Toast;
 
 
 import org.json.JSONArray;
@@ -42,7 +42,7 @@ public class MainActivityFragment extends Fragment {
     public int mPosition;
 
     public interface Calback{
-        public void OnItemSelected(Bundle bundle);
+        public void onItemSelected(Bundle bundle);
     }
     public MainActivityFragment() {
     }
@@ -65,14 +65,20 @@ public class MainActivityFragment extends Fragment {
         gridView= (GridView)view.findViewById(R.id.gridView);
         this.intent=new Intent(getActivity(),DetalView.class);
         bundle.putString("api", APIKEY);
-        GetData.execute(true);
+        if (isNetworkAvailable())
+            GetData.execute(true);
+        else
+            Toast.makeText(getActivity(),"No Network Available",Toast.LENGTH_SHORT).show();
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                String data=imageAdapter.getItem(position);
                 //oast.makeText(getActivity(),data,Toast.LENGTH_SHORT).show();
+                if(isNetworkAvailable()){
                 bundle.putString("link", data.substring(31));
-                ((Calback)getActivity()).OnItemSelected(bundle);
+                ((Calback)getActivity()).onItemSelected(bundle);}
+                else
+                    Toast.makeText(getActivity(),"No Network Available",Toast.LENGTH_SHORT).show();
                 mPosition=position;
               //startActivity(intent.putExtras(bundle));
             }
@@ -134,7 +140,7 @@ public class MainActivityFragment extends Fragment {
                     dataJsonStr = null;
                 }
                 dataJsonStr = buffer.toString();
-            } catch (IOException e) {
+            } catch (Exception e) {
                // Log.e("PlaceholderFragment", "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
                 // to parse it.
@@ -146,7 +152,7 @@ public class MainActivityFragment extends Fragment {
                 if (reader != null) {
                     try {
                         reader.close();
-                    } catch (final IOException e) {
+                    } catch (final Exception e) {
                        // Log.e("PlaceholderFragment", "Error closing stream", e);
                     }
                 }
@@ -158,7 +164,7 @@ public class MainActivityFragment extends Fragment {
                 return getPicData(dataJsonStr);
 
             }
-            catch (JSONException e){
+            catch (Exception e){
              //   Log.e("error",e.getMessage(),e);
                 e.printStackTrace();
             }
@@ -206,7 +212,12 @@ public class MainActivityFragment extends Fragment {
         }
         super.onSaveInstanceState(outState);
     }
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -217,10 +228,16 @@ public class MainActivityFragment extends Fragment {
         //noinspection SimplifiableIfStatement
 
         if (id==R.id.action_settings1){
-            new rating(getActivity()).execute(true);
+            if (isNetworkAvailable())
+                new rating(getActivity()).execute(true);
+            else
+                Toast.makeText(getActivity(),"No Network Available",Toast.LENGTH_SHORT).show();
         }
         if (id==R.id.action_settings2){
-            new rating(getActivity()).execute(false);
+            if(isNetworkAvailable())
+                new rating(getActivity()).execute(false);
+            else
+                Toast.makeText(getActivity(),"No Network Available",Toast.LENGTH_SHORT).show();
         }
         if (id==R.id.action_settings3){
             Intent intent=new Intent(getActivity(),Fav.class);

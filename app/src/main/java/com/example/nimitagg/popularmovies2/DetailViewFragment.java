@@ -150,7 +150,7 @@ public class DetailViewFragment extends Fragment {
 
                     }
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -261,7 +261,7 @@ public class DetailViewFragment extends Fragment {
                     dataJsonStr = null;
                 }
                 dataJsonStr = buffer.toString();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 // Log.e("PlaceholderFragment", "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
                 // to parse it.
@@ -273,7 +273,7 @@ public class DetailViewFragment extends Fragment {
                 if (reader != null) {
                     try {
                         reader.close();
-                    } catch (final IOException e) {
+                    } catch (final Exception e) {
                         // Log.e("PlaceholderFragment", "Error closing stream", e);
                     }
                 }

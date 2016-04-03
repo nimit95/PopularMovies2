@@ -32,6 +32,7 @@ public class FavFragment extends Fragment implements LoaderManager.LoaderCallbac
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     ImageListAdapter imageAdapter;
+    public int mPosition;
     cursorAdapter cur;
     GridView gridView;
     Cursor cursor;
@@ -103,9 +104,14 @@ public class FavFragment extends Fragment implements LoaderManager.LoaderCallbac
                 bundle.putString("release", cursor.getString(6));
              //   cursor.close();
                 ((Calback)getActivity()).OnItemSelected(bundle);
+                mPosition=position;
            /*     */
             }
         });
+        if(savedInstanceState!=null && savedInstanceState.containsKey("pos")){
+            mPosition=savedInstanceState.getInt("pos",0);
+            gridView.setSelection(mPosition);
+        }
         return view;
     }
     @Override
@@ -125,7 +131,7 @@ public class FavFragment extends Fragment implements LoaderManager.LoaderCallbac
         //getApplicationContext().getContentResolver().notifyDa(TestTable.CONTENT_URI,null);
         //  cur.notifyDataSetChanged();
         cursor=getActivity().getContentResolver().query(TestTable.CONTENT_URI,null,null,null,null);
-        //cur.swapCursor(cursor);
+        //cur.swapCursor(cursor);1qw
         // cur.notifyDataSetChanged();
         /*getSupportLoaderManager().restartLoader(0, null, this);*/
     }
@@ -135,7 +141,13 @@ public class FavFragment extends Fragment implements LoaderManager.LoaderCallbac
         cur.swapCursor(null);
 
     }
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(mPosition!=gridView.INVALID_POSITION){
+            outState.putInt("pos",mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
 
 
     public class cursorAdapter extends CursorAdapter {
